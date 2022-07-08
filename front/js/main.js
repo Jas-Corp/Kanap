@@ -1,4 +1,6 @@
+const base_url = "http://localhost:3000/api/products/";
 const products = document.getElementById("items");
+window.localStorage.setItem("t", "COUCOU");
 
 async function getProducts(url) {
   const response = await fetch(url);
@@ -9,7 +11,7 @@ async function getProducts(url) {
 function buildProductList(canapes) {
   var productlist = "";
 
-  canapes.forEach(function (canape) {
+  canapes.forEach((canape) => {
     productlist +=
       '<a href="./product.html?id=' +
       canape._id +
@@ -23,12 +25,12 @@ function buildProductList(canapes) {
       canape.description +
       "</p> </article> </a>";
   });
-  
+
   return productlist;
 }
 
 async function loadProducts() {
-  const canapes = await getProducts("http://localhost:3000/api/products");
+  const canapes = await getProducts(base_url);
   products.innerHTML = buildProductList(canapes);
 }
 

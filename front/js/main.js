@@ -1,6 +1,6 @@
 const base_url = "http://localhost:3000/api/products/";
 const products = document.getElementById("items");
-window.localStorage.setItem("t", "COUCOU");
+
 
 async function getProducts(url) {
   const response = await fetch(url);

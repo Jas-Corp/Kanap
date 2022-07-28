@@ -1,5 +1,9 @@
 const base_url = "http://localhost:3000/api/products/";
-const products = document.getElementById("items");
+const displayed_products = document.getElementById("items");
+
+function StringToNode(string) {
+  return document.createRange().createContextualFragment(string);
+}
 
 async function getProducts(url) {
   const response = await fetch(url);
@@ -7,18 +11,14 @@ async function getProducts(url) {
   return data;
 }
 
-function StringToNode(string) {
-  return document.createRange().createContextualFragment(string);
-}
-
-function buildProductList(canapes) {
+function buildProductList(products) {
   let productlist = "";
 
-  canapes.forEach((canape) => {
-    productlist += `<a href="./product.html?id=${canape._id}"> 
-      <article> <img src="${canape.imageUrl}" alt="${canape.altTxt}"> 
-        <h3 class="productName">${canape.name}</h3> 
-        <p class="productDescription">${canape.description}</p> 
+  products.forEach((product) => {
+    productlist += `<a href="./product.html?id=${product._id}"> 
+      <article> <img src="${product.imageUrl}" alt="${product.altTxt}"> 
+        <h3 class="productName">${product.name}</h3> 
+        <p class="productDescription">${product.description}</p> 
       </article> 
     </a>`;
   });
@@ -27,9 +27,8 @@ function buildProductList(canapes) {
 }
 
 async function loadProducts() {
-  const canapes = await getProducts(base_url);
-
-  products.appendChild(StringToNode(buildProductList(canapes)));
+  const products = await getProducts(base_url);
+  displayed_products.appendChild(StringToNode(buildProductList(products)));
 }
 
 loadProducts();

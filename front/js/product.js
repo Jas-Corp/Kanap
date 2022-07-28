@@ -57,20 +57,36 @@ async function loadProduct() {
   loadText(product);
 }
 
+const color_selected = document.querySelector("#colors");
+const quantity = document.querySelector("#quantity");
+
+color_selected.addEventListener("change", (event) => {
+  checkIfEnterIsCorrect();
+});
+quantity.addEventListener("change", (event) => {
+  checkIfEnterIsCorrect();
+});
+
+function checkIfEnterIsCorrect() {
+  if (color_selected.selectedIndex == 0 || quantity.value == 0)
+    document
+      .querySelector(".item__content__addButton")
+      .classList.remove("isgood");
+  else
+    document.querySelector(".item__content__addButton").classList.add("isgood");
+}
+
 const addToCart_button = document.querySelector("#addToCart");
 
 addToCart_button.onclick = async (event) => {
-  const color_selected = document.querySelector("#colors");
-  const quantity = document.querySelector("#quantity");
-  if (color_selected.selectedIndex == 0)
-    alert("Vous devez choisir une couleur");
-  else if (quantity.value == 0)
-    alert("Vous devez choisir un nombre supérieur a 0");
-  else {
-    window.localStorage.setItem("canap", "107fb5b75607497b96722bda5b504926"); // TODO
+  if (
+    document
+      .querySelector(".item__content__addButton")
+      .classList.contains("isgood")
+  ) {
+    addToCart();
   }
 };
 
 function addToCart() {}
 loadProduct();
-addToCart();

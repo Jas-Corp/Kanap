@@ -1,5 +1,15 @@
 const base_url = "http://localhost:3000/api/products/";
 
+function StringToNode(string) {
+  return document.createRange().createContextualFragment(string);
+}
+
+function getCurrentUrlId() {
+  const url = window.location.href;
+  const id = url.substring(url.lastIndexOf("=") + 1);
+  return id;
+}
+
 // GET THE PRODUCT
 async function getProductData(url) {
   const response = await fetch(url);
@@ -7,21 +17,18 @@ async function getProductData(url) {
 
   return data;
 }
-function getCurrentUrlId() {
-  const url = window.location.href;
-  const id = url.substring(url.lastIndexOf("=") + 1);
-  return id;
-}
 
-// LOAD THE PRODUCT
-function loadColor(product) {
-  const colors = document.getElementById("colors");
-  var colorList = '<option value="">--SVP, choisissez une couleur --</option>';
+function buildColorList(product) {
+  let colorList = "";
   product.colors.forEach((color) => {
     colorList += '<option value="' + color + '">' + color + "</option>";
   });
-
-  colors.innerHTML = colorList;
+  return colorList;
+}
+// LOAD THE PRODUCT
+function loadColor(product) {
+  const colors = document.getElementById("colors");
+  colors.appendChild(StringToNode(buildColorList(product)));
 }
 
 function loadImage(product) {
@@ -38,9 +45,9 @@ function loadText(product) {
   const description_p = document.getElementById("description");
 
   document.title = product.name;
-  price_span.innerHTML = product.price;
-  title_h1.innerHTML = product.name;
-  description_p.innerHTML = product.description;
+  price_span.appendChild(StringToNode(product.price));
+  title_h1.appendChild(StringToNode(product.name));
+  description_p.appendChild(StringToNode(product.description));
 }
 
 async function loadProduct() {

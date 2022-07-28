@@ -21,7 +21,7 @@ async function getProductData(url) {
 function buildColorList(product) {
   let colorList = "";
   product.colors.forEach((color) => {
-    colorList += '<option value="' + color + '">' + color + "</option>";
+    colorList += `<option value="${color}">${color}</option>`;
   });
   return colorList;
 }

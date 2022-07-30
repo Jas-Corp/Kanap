@@ -1,23 +1,8 @@
-const base_url = "http://localhost:3000/api/products/";
+import { getCurrentUrlId, StringToNode } from "./utils.js";
+import { getProductData } from "./api.js";
+import { addToCart } from "./cartManager.js";
 
-function StringToNode(string) {
-  return document.createRange().createContextualFragment(string);
-}
-
-function getCurrentUrlId() {
-  const url = window.location.href;
-  const id = url.substring(url.lastIndexOf("=") + 1);
-  return id;
-}
-
-// GET THE PRODUCT
-async function getProductData(url) {
-  const response = await fetch(url);
-  var data = await response.json();
-
-  return data;
-}
-
+// BUILD THE COLOR INPUT
 function buildColorList(product) {
   let colorList = "";
   product.colors.forEach((color) => {
@@ -25,6 +10,7 @@ function buildColorList(product) {
   });
   return colorList;
 }
+
 // LOAD THE PRODUCT
 function loadColor(product) {
   const colors = document.getElementById("colors");
@@ -51,21 +37,11 @@ function loadText(product) {
 }
 
 async function loadProduct() {
-  const product = await getProductData(base_url + getCurrentUrlId());
+  const product = await getProductData(getCurrentUrlId());
   loadColor(product);
   loadImage(product);
   loadText(product);
 }
-
-const color_selected = document.querySelector("#colors");
-const quantity = document.querySelector("#quantity");
-
-color_selected.addEventListener("change", (event) => {
-  checkIfEnterIsCorrect();
-});
-quantity.addEventListener("change", (event) => {
-  checkIfEnterIsCorrect();
-});
 
 function checkIfEnterIsCorrect() {
   if (color_selected.selectedIndex == 0 || quantity.value == 0)
@@ -76,17 +52,26 @@ function checkIfEnterIsCorrect() {
     document.querySelector(".item__content__addButton").classList.add("isgood");
 }
 
+const color_selected = document.querySelector("#colors");
+const quantity = document.querySelector("#quantity");
+
+color_selected.addEventListener("change", () => {
+  checkIfEnterIsCorrect();
+});
+quantity.addEventListener("change", () => {
+  checkIfEnterIsCorrect();
+});
+
 const addToCart_button = document.querySelector("#addToCart");
 
-addToCart_button.onclick = async (event) => {
+addToCart_button.onclick = async () => {
   if (
     document
       .querySelector(".item__content__addButton")
       .classList.contains("isgood")
   ) {
-    addToCart();
+    addToCart(getCurrentUrlId(), color_selected, quantity);
   }
 };
 
-function addToCart() {}
 loadProduct();

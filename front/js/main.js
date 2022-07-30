@@ -1,15 +1,5 @@
-const base_url = "http://localhost:3000/api/products/";
-const displayed_products = document.getElementById("items");
-
-function StringToNode(string) {
-  return document.createRange().createContextualFragment(string);
-}
-
-async function getProducts(url) {
-  const response = await fetch(url);
-  let data = await response.json();
-  return data;
-}
+import { getProducts } from "./api.js";
+import { StringToNode } from "./utils.js";
 
 function buildProductList(products) {
   let productlist = "";
@@ -27,8 +17,9 @@ function buildProductList(products) {
 }
 
 async function loadProducts() {
-  const products = await getProducts(base_url);
-  displayed_products.appendChild(StringToNode(buildProductList(products)));
+  const products_section = document.getElementById("items");
+  const products = await getProducts();
+  products_section.appendChild(StringToNode(buildProductList(products)));
 }
 
 loadProducts();

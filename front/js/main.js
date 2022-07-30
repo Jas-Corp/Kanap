@@ -1,6 +1,7 @@
 import { getProducts } from "./api.js";
 import { StringToNode } from "./utils.js";
 
+// Construit la liste des produit en html a partir d'un json.
 function buildProductList(products) {
   let productlist = "";
 
@@ -16,10 +17,11 @@ function buildProductList(products) {
   return productlist;
 }
 
+// Charge les produit dans le visuel de la page.
 async function loadProducts() {
-  const products_section = document.getElementById("items");
-  const products = await getProducts();
-  products_section.appendChild(StringToNode(buildProductList(products)));
+  const PRODUCTS = await getProducts();
+  let products_section = document.getElementById("items");
+  products_section.appendChild(StringToNode(buildProductList(PRODUCTS)));
 }
 
 loadProducts();

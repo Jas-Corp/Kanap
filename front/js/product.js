@@ -2,7 +2,7 @@ import { getCurrentUrlId, StringToNode } from "./utils.js";
 import { getProductData } from "./api.js";
 import { addToCart } from "./cartManager.js";
 
-// BUILD THE COLOR INPUT
+// Construit la liste des couleurs d'un produit en html a partir d'un json.
 function buildColorList(product) {
   let colorList = "";
   product.colors.forEach((color) => {
@@ -11,24 +11,26 @@ function buildColorList(product) {
   return colorList;
 }
 
-// LOAD THE PRODUCT
+//Charger les couleurs d'un produit dnas le visuel de la page.
 function loadColor(product) {
-  const colors = document.getElementById("colors");
+  let colors = document.getElementById("colors");
   colors.appendChild(StringToNode(buildColorList(product)));
 }
 
+//Charger l'images d'un produit dnas le visuel de la page.
 function loadImage(product) {
-  const img_div = document.querySelector(".item__img");
-  var productImg = document.createElement("img");
+  let img_div = document.querySelector(".item__img");
+  let productImg = document.createElement("img");
   img_div.appendChild(productImg);
   productImg.src = product.imageUrl;
   productImg.alt = product.altTxt;
 }
 
+//Charger les textes d'un produit dnas le visuel de la page.
 function loadText(product) {
-  const title_h1 = document.getElementById("title");
-  const price_span = document.getElementById("price");
-  const description_p = document.getElementById("description");
+  let title_h1 = document.getElementById("title");
+  let price_span = document.getElementById("price");
+  let description_p = document.getElementById("description");
 
   document.title = product.name;
   price_span.appendChild(StringToNode(product.price));
@@ -36,13 +38,16 @@ function loadText(product) {
   description_p.appendChild(StringToNode(product.description));
 }
 
+//Charger le produit dans le visuel de la page
 async function loadProduct() {
-  const product = await getProductData(getCurrentUrlId());
-  loadColor(product);
-  loadImage(product);
-  loadText(product);
+  const PRODUCT = await getProductData(getCurrentUrlId());
+
+  loadColor(PRODUCT);
+  loadImage(PRODUCT);
+  loadText(PRODUCT);
 }
 
+//Vérifier si les champs de selectino de couleur et quantité son correctement renseignée.
 function checkIfEnterIsCorrect() {
   if (color_selected.selectedIndex == 0 || quantity.value == 0)
     document
@@ -52,8 +57,8 @@ function checkIfEnterIsCorrect() {
     document.querySelector(".item__content__addButton").classList.add("isgood");
 }
 
-const color_selected = document.querySelector("#colors");
-const quantity = document.querySelector("#quantity");
+let color_selected = document.querySelector("#colors");
+let quantity = document.querySelector("#quantity");
 
 color_selected.addEventListener("change", () => {
   checkIfEnterIsCorrect();

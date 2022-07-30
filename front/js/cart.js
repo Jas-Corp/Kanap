@@ -6,22 +6,24 @@ let cart = getCart();
 let products_html = "";
 let total_price = 0;
 
+//Construit la liste des produits dans le panier.
 const buildProductList = cart.map(async (product) => {
-  const product_data = await getProductData(product.id);
-  const colors = Object.keys(product.colors);
-  colors.map((color) => {
+  const PRODUCT_DATA = await getProductData(product.id);
+  const PRODUCT_COLORS = Object.keys(product.colors);
+
+  PRODUCT_COLORS.map((color) => {
     let quantity = product.colors[color];
-    total_price += product_data.price * quantity;
+    total_price += PRODUCT_DATA.price * quantity;
 
     products_html += `<article class="cart__item" data-id="${product.id}" data-color="${color}">
     <div class="cart__item__img">
-      <img src="${product_data.imageUrl}" alt="${product_data.altTxt}">
+      <img src="${PRODUCT_DATA.imageUrl}" alt="${PRODUCT_DATA.altTxt}">
     </div>
     <div class="cart__item__content">
       <div class="cart__item__content__description">
-        <h2>${product_data.name}</h2>
+        <h2>${PRODUCT_DATA.name}</h2>
         <p>${color}</p>
-        <p>${product_data.price}€</p>
+        <p>${PRODUCT_DATA.price}€</p>
       </div>
       <div class="cart__item__content__settings">
         <div class="cart__item__content__settings__quantity">
@@ -37,17 +39,19 @@ const buildProductList = cart.map(async (product) => {
   });
 });
 
+//Charger les produits du cart dans le visuel de la page.
 async function loadCart() {
   await Promise.all(buildProductList);
   let cart_items = document.querySelector("#cart__items");
   cart_items.appendChild(StringToNode(products_html));
   document.querySelector("#totalPrice").appendChild(StringToNode(total_price));
 
-  remove();
-  change();
+  removeCartProduct();
+  changeCartProductQuantity();
 }
 
-const remove = () => {
+//Supprimer un produit dans le visuel de la page
+const removeCartProduct = () => {
   let buttons = document.getElementsByClassName("deleteItem");
 
   for (let button of buttons) {
@@ -65,7 +69,8 @@ const remove = () => {
   }
 };
 
-const change = () => {
+//Changer la quantité d'un produit dans le cart du local storage.
+const changeCartProductQuantity = () => {
   let value_input = document.getElementsByClassName("itemQuantity");
 
   for (let input of value_input) {
@@ -78,6 +83,7 @@ const change = () => {
   }
 };
 
+//Change le prix total affiché.
 function chaneTotalPrice() {
   // TODO
 }

@@ -34,11 +34,15 @@ export function addToCart(product_id, color_selected, quantity) {
     let inCartProduct_colors = inCartProduct.colors;
 
     if (inCartProduct_colors.hasOwnProperty(product_color)) {
+
       let totalQuantity =
         inCartProduct_colors[product_color] + parseInt(product_quantity);
       if (totalQuantity > 100) totalQuantity = 100;
       inCartProduct_colors[product_color] = totalQuantity;
+      
     } else inCartProduct_colors[product_color] = parseInt(product_quantity);
+
+
   } else {
     let product = JSON.parse(
       `{"id":"${product_id}","colors":{"${product_color}":${product_quantity}}}`
@@ -70,7 +74,7 @@ export function removeFromCart(product_id, color) {
 }
 
 //Changer la quantité d'un produit dans le cart selon son id et sa couleur
-export function changeQuantity(product_id, color, quantity) {
+export function changeQuantityOfProduct(product_id, color, quantity) {
   let cart = getCart();
   if (isInTheCart(product_id, cart)) {
     let inCartProduct = getProductInCart(product_id, cart);

@@ -1,4 +1,8 @@
-import { getCart, removeFromCart, changeQuantity } from "./cartManager.js";
+import {
+  getCart,
+  removeFromCart,
+  changeQuantityOfProduct,
+} from "./cartManager.js";
 import { StringToNode } from "./utils.js";
 import { getProductData } from "./api.js";
 
@@ -55,7 +59,7 @@ const removeCartProduct = () => {
   let buttons = document.getElementsByClassName("deleteItem");
 
   for (let button of buttons) {
-    button.onclick = (e) => {
+    button.onclick = () => {
       let product_id = button.getAttribute("data-id");
       let product_color = button.getAttribute("data-color");
       let cart_items = document.querySelector("#cart__items");
@@ -77,15 +81,19 @@ const changeCartProductQuantity = () => {
     input.addEventListener("change", () => {
       let product_id = input.getAttribute("data-id");
       let product_color = input.getAttribute("data-color");
-      changeQuantity(product_id, product_color, input.value);
-      chaneTotalPrice();
+      if(input.value > 100) input.value = 100;
+      changeQuantityOfProduct(product_id, product_color, input.value);
+      chaneTotalPrice(product_id, input.value);
     });
   }
 };
 
 //Change le prix total affiché.
-function chaneTotalPrice() {
-  // TODO
+async function chaneTotalPrice() {
+
+
+
+
 }
 
 loadCart();

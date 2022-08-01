@@ -15,7 +15,6 @@ export async function getProducts() {
 export async function getProductData(id) {
   const response = await fetch(BASE_URL + id);
   if (response.status == 404) throw Error("Product is not found.");
-
   var data = await response.json();
   return data;
 }

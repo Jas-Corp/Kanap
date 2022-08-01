@@ -40,11 +40,15 @@ function loadText(product) {
 
 //Charger le produit dans le visuel de la page
 async function loadProduct() {
-  const PRODUCT = await getProductData(getCurrentUrlId());
-
-  loadColor(PRODUCT);
-  loadImage(PRODUCT);
-  loadText(PRODUCT);
+  try {
+    const PRODUCT = await getProductData(getCurrentUrlId());
+    loadColor(PRODUCT);
+    loadImage(PRODUCT);
+    loadText(PRODUCT);
+  } catch (error) {
+    console.error(error);
+    window.location.replace("../html/404.html");
+  }
 }
 
 //Vérifier si les champs de selectino de couleur et quantité son correctement renseignée.

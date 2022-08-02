@@ -3,12 +3,20 @@ import {
   removeFromCart,
   changeQuantityOfProduct,
 } from "./cartManager.js";
-import { StringToNode } from "./utils.js";
+import {
+  StringToNode,
+  checkEmailValidity,
+  checkNameValidity,
+  checkFirstNameValidity,
+  checkAdressValidity,
+  checkCityValidity,
+} from "./utils.js";
 import { getProductData } from "./api.js";
 
 let cart = getCart();
 let products_html = "";
 let total_price = 0;
+let total_articles = 0;
 
 //Construit la liste des produits dans le panier.
 const buildProductList = cart.map(async (product) => {
@@ -18,6 +26,7 @@ const buildProductList = cart.map(async (product) => {
   PRODUCT_COLORS.map((color) => {
     let quantity = product.colors[color];
     total_price += PRODUCT_DATA.price * quantity;
+    total_articles += quantity;
 
     products_html += `<article class="cart__item" data-id="${product.id}" data-color="${color}">
     <div class="cart__item__img">
@@ -49,6 +58,9 @@ async function loadCart() {
   let cart_items = document.querySelector("#cart__items");
   cart_items.appendChild(StringToNode(products_html));
   document.querySelector("#totalPrice").appendChild(StringToNode(total_price));
+  document
+    .querySelector("#totalQuantity")
+    .appendChild(StringToNode(total_articles));
 
   removeCartProduct();
   changeCartProductQuantity();
@@ -68,7 +80,7 @@ const removeCartProduct = () => {
       cart_items.removeChild(
         document.querySelectorAll(`[data-id="${product_id}"]`)[0]
       );
-      chaneTotalPrice();
+      chaneTotalPriceAndQuantity();
     };
   }
 };
@@ -81,19 +93,54 @@ const changeCartProductQuantity = () => {
     input.addEventListener("change", () => {
       let product_id = input.getAttribute("data-id");
       let product_color = input.getAttribute("data-color");
-      if(input.value > 100) input.value = 100;
-      changeQuantityOfProduct(product_id, product_color, input.value);
-      chaneTotalPrice(product_id, input.value);
+      if (input.value > 100) input.value = 100;
+      changeQuantityOfProduct(product_id, product_color, +input.value);
+      chaneTotalPriceAndQuantity(product_id, +input.value);
     });
   }
 };
 
-//Change le prix total affiché.
-async function chaneTotalPrice() {
+//Change le prix et la quantité total affiché.
+async function chaneTotalPriceAndQuantity() {
+  let cart = getCart();
+  let total_Quantity = 0;
+  let total = cart.reduce(async (acc, product) => {
+    let product_data = await getProductData(product.id);
+    let price = product_data.price;
+    const PRODUCT_COLORS = Object.keys(product.colors);
+    PRODUCT_COLORS.map((color) => {
+      total_Quantity += product.colors[color];
+      price = product.colors[color] * price;
+    });
 
+    return price + (await acc);
+  }, 0);
 
-
-
+  let totalPrice = document.getElementById("totalPrice");
+  totalPrice.innerHTML = await total;
+  let totalQuantity = document.getElementById("totalQuantity");
+  totalQuantity.innerHTML = total_Quantity;
 }
+
+checkFirstNameValidity(
+  document.getElementById("firstName"),
+  document.getElementById("firstNameErrorMsg")
+);
+checkNameValidity(
+  document.getElementById("lastName"),
+  document.getElementById("lastNameErrorMsg")
+);
+checkAdressValidity(
+  document.getElementById("address"),
+  document.getElementById("addressErrorMsg")
+);
+checkCityValidity(
+  document.getElementById("city"),
+  document.getElementById("cityErrorMsg")
+);
+console.log(checkEmailValidity(
+  document.getElementById("email"),
+  document.getElementById("emailErrorMsg")
+));
 
 loadCart();

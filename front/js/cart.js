@@ -3,15 +3,16 @@ import {
   removeFromCart,
   changeQuantityOfProduct,
 } from "./cartManager.js";
+import { StringToNode } from "./utils.js";
 import {
-  StringToNode,
   checkEmailValidity,
   checkNameValidity,
   checkFirstNameValidity,
   checkAdressValidity,
   checkCityValidity,
-} from "./utils.js";
-import { getProductData } from "./api.js";
+  allFormInputIsValids,
+} from "./formCheck.js";
+import { getProductData, sendOrder } from "./api.js";
 
 let cart = getCart();
 let products_html = "";
@@ -138,9 +139,29 @@ checkCityValidity(
   document.getElementById("city"),
   document.getElementById("cityErrorMsg")
 );
-console.log(checkEmailValidity(
+
+checkEmailValidity(
   document.getElementById("email"),
   document.getElementById("emailErrorMsg")
-));
+);
+
+const order_button = document.querySelector("#order");
+
+order_button.onclick = async () => {
+  if (allFormInputIsValids()) {
+    let cart = getCart();
+    let formData = {
+      firstName: document.getElementById("firstName").value,
+      lastName: document.getElementById("lastName").value,
+      address: document.getElementById("address").value,
+      city: document.getElementById("city").value,
+      email: document.getElementById("email").value,
+    };
+
+    let ids = [];
+    cart.forEach((element) => ids.push(element.id));
+    sendOrder(formData, ids);
+  }
+};
 
 loadCart();

@@ -18,3 +18,15 @@ export async function getProductData(id) {
   var data = await response.json();
   return data;
 }
+
+export async function sendOrder(formData, products) {
+  const response = await fetch(BASE_URL + "order", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({ contact: formData, products: products }),
+  });
+  // TODO
+  return await response.json();
+}

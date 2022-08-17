@@ -9,3 +9,5 @@ export function getCurrentUrlId() {
   const ID = URL.substring(URL.lastIndexOf("=") + 1);
   return ID;
 }
+
+

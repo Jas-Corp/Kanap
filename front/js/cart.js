@@ -148,20 +148,22 @@ checkEmailValidity(
 const order_button = document.querySelector("#order");
 
 order_button.onclick = async () => {
-  if (allFormInputIsValids()) {
-    let cart = getCart();
-    let formData = {
-      firstName: document.getElementById("firstName").value,
-      lastName: document.getElementById("lastName").value,
-      address: document.getElementById("address").value,
-      city: document.getElementById("city").value,
-      email: document.getElementById("email").value,
-    };
+  if (!allFormInputIsValids()) return;
+  
+  let cartItems = getCart();
 
-    let ids = [];
-    cart.forEach((element) => ids.push(element.id));
-    sendOrder(formData, ids);
-  }
+  let formData = {
+    firstName: document.getElementById("firstName").value,
+    lastName: document.getElementById("lastName").value,
+    address: document.getElementById("address").value,
+    city: document.getElementById("city").value,
+    email: document.getElementById("email").value,
+  };
+
+  const ids = cartItems.map((cartItem) => cartItem.id);
+  const orders = await sendOrder(formData, ids);
+  localStorage.clear();
+  window.location.replace("./confirmation.html?id=" + orders.orderId);
 };
 
 loadCart();

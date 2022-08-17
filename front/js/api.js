@@ -27,6 +27,7 @@ export async function sendOrder(formData, products) {
     },
     body: JSON.stringify({ contact: formData, products: products }),
   });
-  // TODO
-  return await response.json();
+
+  const result = await response.json();
+  return result;
 }
